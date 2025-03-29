@@ -1,0 +1,6 @@
+@WeatherArchive.Server_HostAddress = http://localhost:5053
+
+GET {{WeatherArchive.Server_HostAddress}}
+Accept: application/json
+
+###

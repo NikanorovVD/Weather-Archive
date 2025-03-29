@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WeatherArchive.Server</name>
+    </assembly>
+    <members>
+        <member name="M:WeatherArchive.Server.Controllers.WeatherArchiveController.UploadArchiveFilesAsync(System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Http.IFormFile})">
+            <summary>
+            Загрузка архивов погодных условий на сервер
+            </summary>
+            <param name="files">Файлы с данными погодных условий в формате .xls или .xlsx</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeatherArchive.Server.Controllers.WeatherArchiveController.GetWeatherRecordsAsync(System.Int32,System.Nullable{System.Int32},System.Threading.CancellationToken,System.Int32,System.Int32)">
+            <summary>
+            Получение архивных погодных данных
+            </summary>
+            <param name="year">Год для фильтрации</param>
+            <param name="month">Месяц для фильтрации (1 - январь), если не указан, то фильтр только по году</param>
+            <param name="cancellationToken"></param>
+            <param name="pageSize">Размер страницы</param>
+            <param name="pageNumber">Номер страницы (нумерация с нуля)</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
