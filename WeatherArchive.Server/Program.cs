@@ -27,13 +27,11 @@ namespace WeatherArchive.Server
             app.UseStaticFiles();
 
             app.MapOpenApi();
-            app.MapAppScalarApi();
             app.UseSwagger();
             app.UseSwaggerUI();
 
             app.UseHttpsRedirection();
             app.MapControllers();
-           // app.MapFallbackToFile("/index.html");
             app.Run();
         }
     }
