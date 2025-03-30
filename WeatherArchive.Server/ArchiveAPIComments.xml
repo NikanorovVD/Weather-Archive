@@ -22,5 +22,11 @@
             <param name="pageNumber">Номер страницы (нумерация с нуля)</param>
             <returns></returns>
         </member>
+        <member name="M:WeatherArchive.Server.Controllers.WeatherArchiveController.GetAvailableYears">
+            <summary>
+            Получение списка всех годов, по которым есть архивные данные
+            </summary>
+            <returns></returns>
+        </member>
     </members>
 </doc>

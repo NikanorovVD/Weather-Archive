@@ -1,0 +1,12 @@
+section{
+    margin: 20px;
+    margin-left: 80px;
+}
+
+label{
+    margin-right: 15px;
+}
+
+div.container{
+    display: flex;
+}

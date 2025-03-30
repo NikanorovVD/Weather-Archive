@@ -28,14 +28,29 @@ namespace ServiceLayer.Services
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<WeatherRecordDto>> GetWeatherRecordsAsync(Expression<Func<WeatherRecord, bool>> filter, int pageSize, int pageNumber, CancellationToken cancellationToken)
+        public async Task<PageDto<WeatherRecordDto>> GetWeatherRecordsAsync(Expression<Func<WeatherRecord, bool>> filter, int pageSize, int pageNumber, CancellationToken cancellationToken)
+        {
+            Page<WeatherRecord> page = _dbContext.WeatherRecords
+                .Where(filter)
+                .OrderBy(r => r.DateTime)
+                .Page(pageSize, pageNumber);
+
+            return new PageDto<WeatherRecordDto>
+            {
+                Values = await page.Query.ProjectTo<WeatherRecordDto>(_mapper.ConfigurationProvider).ToListAsync(cancellationToken),
+                PageNumber = page.PageNumber,
+                PageSize = page.PageSize,
+                TotalPages = page.TotalPages
+            };               
+        }
+
+        public async Task<IEnumerable<int>> GetYearsHavingData()
         {
             return await _dbContext.WeatherRecords
-                .Where(filter)
-                .Page(pageSize, pageNumber)
-                .OrderBy(r => r.DateTime)
-                .ProjectTo<WeatherRecordDto>(_mapper.ConfigurationProvider)
-                .ToListAsync(cancellationToken);
-        }       
+                .Select(r => r.DateTime.Year)
+                .Distinct()
+                .OrderBy(y => y)
+                .ToListAsync();
+        }
     }
 }

@@ -1,0 +1,18 @@
+.page-size{
+    width: 40px; 
+    height: 30px; 
+    padding: 0; 
+    border: 2px solid black; 
+    box-sizing: border-box; 
+    text-align: center; 
+    font-size: 14px;
+}
+
+.paiging-container {
+    display: flex;
+}
+
+.paging{
+    margin-top: 10px;
+}
+

@@ -1,0 +1,13 @@
+select{
+    width: 100px; 
+    height: 30px; 
+    border: 2px solid black; 
+    box-sizing: border-box; 
+    text-align: center; 
+    font-size: 14px;
+}
+
+div.filter{
+    padding-top: 10px;
+}
+

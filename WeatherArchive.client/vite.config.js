@@ -45,7 +45,15 @@ export default defineConfig({
     },
     server: {
         proxy: {
-            '^/weatherarchive': {
+            '^/WeatherArchive/GetWeatherRecords': {
+                target: 'https://localhost:7056/',
+                secure: false
+            },
+            '^/WeatherArchive/GetAvailableYears': {
+                target: 'https://localhost:7056/',
+                secure: false
+            },
+            '^/WeatherArchive/UploadArchiveFiles': {
                 target: 'https://localhost:7056/',
                 secure: false
             }

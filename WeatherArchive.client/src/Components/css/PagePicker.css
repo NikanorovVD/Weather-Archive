@@ -1,0 +1,83 @@
+.pagepicker-container{
+    display: flex; 
+    gap: 10px; 
+    height: 30px;
+    }
+
+.triangle-buttons {
+   
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin: 2px 0;
+
+    padding: 0.5rem;
+}
+
+.triangle-buttons__triangle {
+    border-style: solid;
+}
+
+.triangle-buttons__triangle--t {
+    border-color: transparent transparent #555;
+    border-width: 0 0.5rem 0.5rem;
+}
+
+.triangle-buttons__triangle--r {
+    border-color: transparent transparent transparent #555;
+    border-width: 0.5rem 0 0.5rem 0.5rem;
+}
+
+.triangle-buttons__triangle--b {
+    border-color: #555 transparent transparent;
+    border-width: 0.5rem 0.5rem 0;
+}
+
+.triangle-buttons__triangle--l {
+    border-color: transparent #555 transparent transparent;
+    border-width: 0.5rem 0.5rem 0.5rem 0;
+}
+
+
+
+.triangle-button {
+    position: relative;
+    width: 160px; 
+    height: 60px; 
+    background: linear-gradient(to right, #333, #555);
+    color: white;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    
+  }
+  
+  .triangle-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 0;
+    height: 0;
+    border-left: 80px solid transparent; 
+    border-right: 80px solid transparent; 
+    border-bottom: 140px solid #333; 
+  }
+  
+  .triangle-button:hover::before {
+    border-bottom-color: #444; 
+  }
+
+  .page-num {
+    width: 40px; 
+    height: 30px; 
+    padding: 0; 
+    border: 2px solid black; 
+    box-sizing: border-box; 
+    text-align: center; 
+    font-size: 14px;
+}

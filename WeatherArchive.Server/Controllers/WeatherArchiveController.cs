@@ -46,14 +46,25 @@ namespace WeatherArchive.Server.Controllers
         public async Task<WeatherRecordsResponse> GetWeatherRecordsAsync(int year, int? month, CancellationToken cancellationToken, int pageSize = 8, int pageNumber = 0)
         {
             var filter = _filterService.CreateFilter(year, month);
-            IEnumerable<WeatherRecordDto> recordsDtos = await _weatherRecordsService.GetWeatherRecordsAsync(filter, pageSize, pageNumber, cancellationToken);
+            PageDto<WeatherRecordDto> page = await _weatherRecordsService.GetWeatherRecordsAsync(filter, pageSize, pageNumber, cancellationToken);
             return new WeatherRecordsResponse
             {
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                Count = recordsDtos.Count(),
-                Data = recordsDtos
+                Data = page.Values,
+                Count = page.Values.Count(),
+                PageNumber = page.PageNumber,
+                PageSize = page.PageSize,
+                TotalPages = page.TotalPages
             };
+        }
+
+        /// <summary>
+        /// Получение списка всех годов, по которым есть архивные данные
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IEnumerable<int>> GetAvailableYears()
+        {
+            return await _weatherRecordsService.GetYearsHavingData();
         }
     }
 }

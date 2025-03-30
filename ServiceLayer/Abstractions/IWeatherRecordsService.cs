@@ -7,7 +7,8 @@ namespace ServiceLayer.Abstractions
     public interface IWeatherRecordsService
     {
         public Task CteateRecordsAsync(IEnumerable<WeatherRecordDto> recordDtos);
-        public Task<IEnumerable<WeatherRecordDto>> GetWeatherRecordsAsync
+        public Task<PageDto<WeatherRecordDto>> GetWeatherRecordsAsync
             (Expression<Func<WeatherRecord, bool>> filter, int pageSize, int pageNumber, CancellationToken cancellationToken);
+        public Task<IEnumerable<int>> GetYearsHavingData();
     }
 }
