@@ -6,7 +6,7 @@ using WeatherArchive.Server.Models;
 namespace WeatherArchive.Server.Controllers
 {
     [ApiController]
-    [Route("[controller]/[action]")]
+    [Route("weather")]
     public class WeatherArchiveController : ControllerBase
     {
         private readonly IParseWeatherXlsService _parseService;
@@ -25,7 +25,7 @@ namespace WeatherArchive.Server.Controllers
         /// </summary>
         /// <param name="files">Файлы с данными погодных условий в формате .xls или .xlsx</param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost("upload")]
         public async Task<IActionResult> UploadArchiveFilesAsync(IEnumerable<IFormFile> files)
         {
             IEnumerable<WeatherRecordDto> records = files.SelectMany(f => _parseService.ParseXls(f.OpenReadStream()));
@@ -42,7 +42,7 @@ namespace WeatherArchive.Server.Controllers
         /// <param name="pageSize">Размер страницы</param>
         /// <param name="pageNumber">Номер страницы (нумерация с нуля)</param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet("archive")]
         public async Task<WeatherRecordsResponse> GetWeatherRecordsAsync(int year, int? month, CancellationToken cancellationToken, int pageSize = 8, int pageNumber = 0)
         {
             var filter = _filterService.CreateFilter(year, month);
@@ -61,7 +61,7 @@ namespace WeatherArchive.Server.Controllers
         /// Получение списка всех годов, по которым есть архивные данные
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet("years")]
         public async Task<IEnumerable<int>> GetAvailableYears()
         {
             return await _weatherRecordsService.GetYearsHavingData();

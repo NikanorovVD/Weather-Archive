@@ -16,7 +16,7 @@ export default function UploadFilesPage() {
         }
 
         try {
-            const response = await fetch('/WeatherArchive/UploadArchiveFiles', {
+            const response = await fetch('/weather/upload', {
                 method: 'POST',
                 body: formData,
             });
@@ -28,7 +28,6 @@ export default function UploadFilesPage() {
         }
         setUploadEnds(true)
         setUploadInProgress(false)
-        setFiles([])
     };
 
     return (
@@ -36,14 +35,14 @@ export default function UploadFilesPage() {
             <form style={{ marginLeft: 50, marginTop: 20 }} onSubmit={handleSubmit}>
                 <label htmlFor="files">Выберите файлы:</label>
                 <input id="files" type="file" multiple onChange={(event) => setFiles(event.target.files)} />
-                <button type="submit">Загрузить</button>
+                <button type="submit" disabled={uploadInProgress}>Загрузить</button>
             </form>
 
             {uploadInProgress &&
                 <h2>Идёт загрузка...</h2>
             }
 
-            {uploadEnds && files.length == 0 &&
+            {uploadEnds &&
                 <h2>Загрузка завершена</h2>
             }
         </>

@@ -14,7 +14,7 @@ export default function WatchArchivePage() {
     const [totalPages, setTotalPages] = useState(0)
 
     const fetchYears = useCallback(async () => {
-        const response = await fetch('WeatherArchive/GetAvailableYears');
+        const response = await fetch('weather/years');
         const years = await response.json();
         setAvailableYears(years)
         setYear(years[0])
@@ -23,7 +23,7 @@ export default function WatchArchivePage() {
     const fetchData = useCallback(async (month, year, pageSize, pageNum) => {
         if (year == undefined) return
 
-        const url = `WeatherArchive/GetWeatherRecords?year=${year}&month=${month}&pageSize=${pageSize}&pageNumber=${pageNum}`
+        const url = `weather/archive?year=${year}&month=${month}&pageSize=${pageSize}&pageNumber=${pageNum}`
         const response = await fetch(url);
 
         if (response.ok) {
