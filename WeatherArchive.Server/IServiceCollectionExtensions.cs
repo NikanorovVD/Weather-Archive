@@ -36,20 +36,6 @@ namespace WeatherArchive.Server
             services.AddScoped<IWeatherRecordsService, WeatherRecordsService>();
         }
 
-        public static void AddAppValidation(this IServiceCollection services)
-        {
-            //services.AddScoped<IValidator<T>, TValidator>();
-
-
-            //ValidatorOptions.Global.LanguageManager.Enabled = false;
-            //ValidatorOptions.Global.DefaultRuleLevelCascadeMode = CascadeMode.Stop;
-            //services.AddFluentValidationAutoValidation(opt =>
-            //{
-            //    opt.DisableDataAnnotationsValidation = true;
-            //});
-        }
-
-
         public static void AddAppAutoMapper(this IServiceCollection services)
         {
             services.AddAutoMapper(typeof(AppMappingProfile));
