@@ -39,7 +39,7 @@ namespace WeatherArchive.Server.Controllers
         /// <param name="year">Год для фильтрации</param>
         /// <param name="month">Месяц для фильтрации (1 - январь), если не указан, то фильтр только по году</param>
         /// <param name="cancellationToken"></param>
-        /// <param name="pageSize">Размер страницы</param>
+        /// <param name="pageSize">Количество записей на одной странице</param>
         /// <param name="pageNumber">Номер страницы (нумерация с нуля)</param>
         /// <returns></returns>
         [HttpGet("archive")]

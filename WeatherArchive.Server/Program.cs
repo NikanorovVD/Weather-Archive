@@ -1,4 +1,3 @@
-using WeatherArchive.Server;
 using ServiceLayer.Services;
 
 namespace WeatherArchive.Server

@@ -10,6 +10,20 @@ namespace ServiceLayer.Services
         private const int _headerRowsCount = 4;
         private const string _dateFormat = "dd.MM.yyyy";
         private const string _timeFormat = "HH:mm";
+
+        private const int _dateRow = 0;
+        private const int _timeRow = 1;
+        private const int _temperatureRow = 2;
+        private const int _humidityRow = 3;
+        private const int _tdRow = 4;
+        private const int _pressureRow = 5;
+        private const int _windDirectionRow = 6;
+        private const int _windSpeedRow = 7;
+        private const int _cloudRow = 8;
+        private const int _hRow = 9;
+        private const int _vvRow = 10;
+        private const int _phenomenaRow = 11;
+
         public IEnumerable<WeatherRecordDto> ParseXls(Stream stream)
         {
             var workbook = new XSSFWorkbook(stream);
@@ -31,20 +45,20 @@ namespace ServiceLayer.Services
             return new WeatherRecordDto()
             {
                 DateTime = new DateTime(
-                    date: DateOnly.ParseExact(row.GetCell(0).StringCellValue, _dateFormat),
-                    time: TimeOnly.ParseExact(row.GetCell(1).StringCellValue, _timeFormat),
+                    date: DateOnly.ParseExact(row.GetCell(_dateRow).StringCellValue, _dateFormat),
+                    time: TimeOnly.ParseExact(row.GetCell(_timeRow).StringCellValue, _timeFormat),
                     kind: DateTimeKind.Utc
                 ),
-                Temperature = ReadDecimal(row.GetCell(2)),
-                RelativeHumidity = ReadUshort(row.GetCell(3)),
-                Td = ReadDecimal(row.GetCell(4)),
-                AtmosphericPressure = ReadUshort(row.GetCell(5)),
-                WindDirection = ReadString(row.GetCell(6)),
-                WindSpeed = ReadUshort(row.GetCell(7)),
-                CloudCover = ReadUshort(row.GetCell(8)),
-                H = ReadUshort(row.GetCell(9)),
-                VV = ReadString(row.GetCell(10)),
-                WeatherPhenomena = ReadString(row.GetCell(11))
+                Temperature = ReadDecimal(row.GetCell(_temperatureRow)),
+                RelativeHumidity = ReadUshort(row.GetCell(_humidityRow)),
+                Td = ReadDecimal(row.GetCell(_tdRow)),
+                AtmosphericPressure = ReadUshort(row.GetCell(_pressureRow)),
+                WindDirection = ReadString(row.GetCell(_windDirectionRow)),
+                WindSpeed = ReadUshort(row.GetCell(_windSpeedRow)),
+                CloudCover = ReadUshort(row.GetCell(_cloudRow)),
+                H = ReadUshort(row.GetCell(_hRow)),
+                VV = ReadString(row.GetCell(_vvRow)),
+                WeatherPhenomena = ReadString(row.GetCell(_phenomenaRow))
             };
         }
 
@@ -53,6 +67,7 @@ namespace ServiceLayer.Services
             return (cell == null) || (cell.CellType == CellType.Blank) ||
                 (cell.CellType == CellType.String && String.IsNullOrEmpty(cell.StringCellValue.Replace(" ", "")));
         }
+
         private ushort? ReadUshort(ICell cell)
         {
             if (CheckForNullOrEmpty(cell)) return null;

@@ -1,6 +1,5 @@
 ﻿using DataLayer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using ServiceLayer.Abstractions;
 using ServiceLayer.Services;
