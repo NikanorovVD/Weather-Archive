@@ -12,6 +12,7 @@ namespace WeatherArchive.Server
             builder.Services.AddAppServices();
 
             builder.Services.AddAppAutoMapper();
+            builder.Services.AddAppValidation();
 
             builder.Services.AddOpenApi();
             builder.Services.AddAppSwagger();

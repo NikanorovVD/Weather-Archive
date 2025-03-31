@@ -4,8 +4,10 @@ using DataLayer;
 using DataLayer.Entities;
 using DataLayer.QueryObjects;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using ServiceLayer.Abstractions;
 using ServiceLayer.Models;
+using ServiceLayer.Models.Errors;
 using System.Linq.Expressions;
 
 namespace ServiceLayer.Services
@@ -24,8 +26,18 @@ namespace ServiceLayer.Services
         public async Task CteateRecordsAsync(IEnumerable<WeatherRecordDto> recordDtos)
         {
             IEnumerable<WeatherRecord> weatherRecords = _mapper.Map<IEnumerable<WeatherRecord>>(recordDtos);
-            await _dbContext.WeatherRecords.AddRangeAsync(weatherRecords);
-            await _dbContext.SaveChangesAsync();
+            try
+            {
+                await _dbContext.WeatherRecords.AddRangeAsync(weatherRecords);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex) 
+            {
+                if (ex.InnerException is PostgresException pgEx &&
+                    pgEx.SqlState == PgErrorCodes.DuplicatePKCode)
+                        throw new ValidationException(new ValidationError(new(){ { "Files", ["Conflicting data. Records must not have the same datetime as the existing records"] } }));
+                else throw;
+            }
         }
 
         public async Task<PageDto<WeatherRecordDto>> GetWeatherRecordsAsync(Expression<Func<WeatherRecord, bool>> filter, int pageSize, int pageNumber, CancellationToken cancellationToken)

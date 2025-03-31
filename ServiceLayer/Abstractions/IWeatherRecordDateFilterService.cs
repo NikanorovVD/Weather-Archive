@@ -10,7 +10,7 @@ namespace ServiceLayer.Abstractions
         /// </summary>
         /// <param name="year">Год</param>
         /// <param name="month">Месяц, если не указан фильтр только по году</param>
-        /// <returns></returns>
+        /// <returns>Expression для фильтрации записей по дате</returns>
         public Expression<Func<WeatherRecord, bool>> CreateFilter(int year, int? month);
         
     }

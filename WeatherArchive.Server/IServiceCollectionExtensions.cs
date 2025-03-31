@@ -1,9 +1,13 @@
 ﻿using DataLayer;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using ServiceLayer.Abstractions;
 using ServiceLayer.Services;
 using WeatherArchive.Server.Automapper;
+using WeatherArchive.Server.Models;
+using WeatherArchive.Server.Validation;
 
 namespace WeatherArchive.Server
 {
@@ -46,6 +50,16 @@ namespace WeatherArchive.Server
         {
             services.AddDbContext<AppDbContext>(options
                => options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+        }
+
+        public static void AddAppValidation(this IServiceCollection services)
+        {
+            services.AddScoped<IValidator<WeatherRecordsRequest>, WeatherRecordsRequestValidator>();
+            services.AddScoped<IValidator<FilesUploadRequest>, FilesUploadRequestValidator>();
+            services.AddFluentValidationAutoValidation(opt =>
+            {
+                opt.DisableDataAnnotationsValidation = true;
+            });
         }
     }
 }

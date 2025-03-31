@@ -4,29 +4,51 @@
         <name>WeatherArchive.Server</name>
     </assembly>
     <members>
-        <member name="M:WeatherArchive.Server.Controllers.WeatherArchiveController.UploadArchiveFilesAsync(System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Http.IFormFile})">
+        <member name="M:WeatherArchive.Server.Controllers.WeatherArchiveController.UploadArchiveFilesAsync(WeatherArchive.Server.Models.FilesUploadRequest)">
             <summary>
             Загрузка архивов погодных условий на сервер
             </summary>
-            <param name="files">Файлы с данными погодных условий в формате .xls или .xlsx</param>
+            <param name="request">Файлы с данными погодных условий в формате .xls или .xlsx</param>
             <returns></returns>
         </member>
-        <member name="M:WeatherArchive.Server.Controllers.WeatherArchiveController.GetWeatherRecordsAsync(System.Int32,System.Nullable{System.Int32},System.Threading.CancellationToken,System.Int32,System.Int32)">
+        <member name="M:WeatherArchive.Server.Controllers.WeatherArchiveController.GetWeatherRecordsAsync(WeatherArchive.Server.Models.WeatherRecordsRequest,System.Threading.CancellationToken)">
             <summary>
             Получение архивных погодных данных
             </summary>
-            <param name="year">Год для фильтрации</param>
-            <param name="month">Месяц для фильтрации (1 - январь), если не указан, то фильтр только по году</param>
+            <param name="request">параметры запроса</param>
             <param name="cancellationToken"></param>
-            <param name="pageSize">Количество записей на одной странице</param>
-            <param name="pageNumber">Номер страницы (нумерация с нуля)</param>
-            <returns></returns>
+            <returns>объект WeatherRecordsResponse с найденными записями</returns>
         </member>
         <member name="M:WeatherArchive.Server.Controllers.WeatherArchiveController.GetAvailableYears">
             <summary>
             Получение списка всех годов, по которым есть архивные данные
             </summary>
-            <returns></returns>
+            <returns>Список годов</returns>
+        </member>
+        <member name="P:WeatherArchive.Server.Models.FilesUploadRequest.Files">
+            <summary>
+            Файлы с данными погодных условий в формате .xls или .xlsx
+            </summary>
+        </member>
+        <member name="P:WeatherArchive.Server.Models.WeatherRecordsRequest.Year">
+            <summary>
+            Год для фильтрации
+            </summary>
+        </member>
+        <member name="P:WeatherArchive.Server.Models.WeatherRecordsRequest.Month">
+            <summary>
+            Месяц для фильтрации (1 - январь), если не указан, то фильтр только по году
+            </summary>
+        </member>
+        <member name="P:WeatherArchive.Server.Models.WeatherRecordsRequest.PageSize">
+            <summary>
+            Количество записей на одной странице
+            </summary>
+        </member>
+        <member name="P:WeatherArchive.Server.Models.WeatherRecordsRequest.PageNumber">
+            <summary>
+            Номер страницы (нумерация с нуля)
+            </summary>
         </member>
     </members>
 </doc>

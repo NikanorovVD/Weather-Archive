@@ -1,7 +1,10 @@
-﻿using NPOI.SS.UserModel;
+﻿using NPOI.HSSF.UserModel;
+using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using ServiceLayer.Abstractions;
 using ServiceLayer.Models;
+using ServiceLayer.Models.Errors;
+
 
 namespace ServiceLayer.Services
 {
@@ -24,20 +27,51 @@ namespace ServiceLayer.Services
         private const int _vvRow = 10;
         private const int _phenomenaRow = 11;
 
-        public IEnumerable<WeatherRecordDto> ParseXls(Stream stream)
+        public IEnumerable<WeatherRecordDto> ParseXls(Stream stream, string filename, ExcelFileType fileType)
         {
-            var workbook = new XSSFWorkbook(stream);
-            var sheets = Enumerable.Range(0, workbook.NumberOfSheets)
-                .Select(i => workbook.GetSheetAt(i));
+            try
+            {
+                IWorkbook workbook;
+                if(fileType == ExcelFileType.XLS)
+                {
+                    workbook = new HSSFWorkbook(stream);
+                }
+                else if (fileType == ExcelFileType.XLSX)
+                {
+                    workbook = new XSSFWorkbook(stream);
+                }
+                else
+                {
+                    throw new NotImplementedException();
+                }
 
-            int firstDataRowIndex = _headerRowsCount;
-            var rows = sheets.SelectMany(sheet =>
-                Enumerable.Range(firstDataRowIndex, sheet.LastRowNum + 1 - firstDataRowIndex)
-                    .Select(rowNum => sheet.GetRow(rowNum)));
+                var sheets = Enumerable.Range(0, workbook.NumberOfSheets)
+                    .Select(i => workbook.GetSheetAt(i));
 
-            var result = rows.Select(row => ParseRow(row));
-            var l = result.ToList();
-            return result;
+                int firstDataRowIndex = _headerRowsCount;
+                var rows = sheets.SelectMany(sheet =>
+                    Enumerable.Range(firstDataRowIndex, sheet.LastRowNum + 1 - firstDataRowIndex)
+                        .Select(rowNum => sheet.GetRow(rowNum)));
+
+                return rows.Select(row => ParseRow(row)).ToList();
+            }
+            catch (Exception)
+            {
+                var error = new ValidationError(new() { { $"File {filename}", ["Invalid file format"] } });
+                throw new ValidationException(error);
+            }
+        }
+
+        public IEnumerable<WeatherRecordDto> ParseXls(Stream stream, string fileName)
+        {
+            string file_extension = Path.GetExtension(fileName);
+            ExcelFileType fileType = file_extension switch
+            {
+                ".xls" => ExcelFileType.XLS,
+                ".xlsx" => ExcelFileType.XLSX,
+                _ => throw new ArgumentException("Invalid file extension", nameof(fileName))
+            };
+            return ParseXls(stream, fileName, fileType);
         }
 
         private WeatherRecordDto ParseRow(IRow row)

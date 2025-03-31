@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Abstractions;
 using ServiceLayer.Models;
+using ServiceLayer.Models.Errors;
 using WeatherArchive.Server.Models;
 
 namespace WeatherArchive.Server.Controllers
@@ -23,30 +24,39 @@ namespace WeatherArchive.Server.Controllers
         /// <summary>
         /// Загрузка архивов погодных условий на сервер
         /// </summary>
-        /// <param name="files">Файлы с данными погодных условий в формате .xls или .xlsx</param>
+        /// <param name="request">Файлы с данными погодных условий в формате .xls или .xlsx</param>
         /// <returns></returns>
         [HttpPost("upload")]
-        public async Task<IActionResult> UploadArchiveFilesAsync(IEnumerable<IFormFile> files)
+        public async Task<IActionResult> UploadArchiveFilesAsync(FilesUploadRequest request)
         {
-            IEnumerable<WeatherRecordDto> records = files.SelectMany(f => _parseService.ParseXls(f.OpenReadStream()));
-            await _weatherRecordsService.CteateRecordsAsync(records);
-            return Ok();
+            try
+            {
+                IEnumerable<WeatherRecordDto> allRecords = [];
+                foreach (var file in request.Files)
+                {                
+                    IEnumerable<WeatherRecordDto> fileRecords = _parseService.ParseXls(file.OpenReadStream(), file.FileName);
+                    allRecords = allRecords.Union(fileRecords);
+                }
+                await _weatherRecordsService.CteateRecordsAsync(allRecords);
+                return Ok();
+            }
+            catch (ValidationException ex) 
+            { 
+                return BadRequest(ex.Error); 
+            }
         }
 
         /// <summary>
         /// Получение архивных погодных данных
         /// </summary>
-        /// <param name="year">Год для фильтрации</param>
-        /// <param name="month">Месяц для фильтрации (1 - январь), если не указан, то фильтр только по году</param>
+        /// <param name="request">параметры запроса</param>
         /// <param name="cancellationToken"></param>
-        /// <param name="pageSize">Количество записей на одной странице</param>
-        /// <param name="pageNumber">Номер страницы (нумерация с нуля)</param>
-        /// <returns></returns>
+        /// <returns>объект WeatherRecordsResponse с найденными записями</returns>
         [HttpGet("archive")]
-        public async Task<WeatherRecordsResponse> GetWeatherRecordsAsync(int year, int? month, CancellationToken cancellationToken, int pageSize = 8, int pageNumber = 0)
+        public async Task<WeatherRecordsResponse> GetWeatherRecordsAsync([FromQuery] WeatherRecordsRequest request, CancellationToken cancellationToken)
         {
-            var filter = _filterService.CreateFilter(year, month);
-            PageDto<WeatherRecordDto> page = await _weatherRecordsService.GetWeatherRecordsAsync(filter, pageSize, pageNumber, cancellationToken);
+            var filter = _filterService.CreateFilter(request.Year, request.Month);
+            PageDto<WeatherRecordDto> page = await _weatherRecordsService.GetWeatherRecordsAsync(filter, request.PageSize, request.PageNumber, cancellationToken);
             return new WeatherRecordsResponse
             {
                 Data = page.Values,
@@ -60,7 +70,7 @@ namespace WeatherArchive.Server.Controllers
         /// <summary>
         /// Получение списка всех годов, по которым есть архивные данные
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Список годов</returns>
         [HttpGet("years")]
         public async Task<IEnumerable<int>> GetAvailableYears()
         {
